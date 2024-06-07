@@ -1,5 +1,5 @@
 ### 本仓库仅限企业内部使用
-1. 在coding中[访问制品库](https://wk88.coding.net/p/vip/artifacts/24411637/composer/package/15298329/version/overview)
+1. 在coding中[访问制品库](https://wk88.coding.net/p/vip/artifacts/24411637/composer/package)
 2. 在coding生成个人令牌作为凭据
 3. 配置推送凭证
    请将下列配置添加到您的 ~/.netrc 文件中：

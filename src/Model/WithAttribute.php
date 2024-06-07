@@ -6,7 +6,6 @@ namespace Guikejia\Eav\Model;
 
 use Guikejia\Eav\Attribute\RefundWithoutVerifyAttribute;
 use Guikejia\Eav\Exception\InvalidEntityAttributeException;
-use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Stringable\Str;
 
@@ -26,8 +25,8 @@ abstract class WithAttribute extends Model
          * @var AttributeSet $attribute_set
          * @var EntityType $entity_type
          */
-        $attribute_set = $this->getAttributeSetModel()->first();
-        $entity_type = $attribute_set?->getEntityTypeModel()->first();
+        $attribute_set = $this->attribute_set()->first();
+        $entity_type = $attribute_set?->entity_type()->first();
 
         if ($entity_type) {
             return $entity_type;
@@ -59,11 +58,11 @@ abstract class WithAttribute extends Model
             throw new InvalidEntityAttributeException('当前实体与实体类型不匹配');
         }
 
-        $attribute_set = $this->getAttributeSetModel()->first();
+        $attribute_set = $this->attribute_set()->first();
         /**
          * @var AttributeSet $attribute_set
          */
-        $attributes = $attribute_set?->getAttributeModel()->get();
+        $attributes = $attribute_set?->attribute()->get();
 
         $values = [];
         /**
@@ -142,8 +141,8 @@ abstract class WithAttribute extends Model
          * @var AttributeSet $attribute_set
          * @var AttributeGroup $attribute_group
          */
-        $attribute_set = $this->getAttributeSetModel()->first();
-        return $attribute_set->getAttributeGroupModel()->get();
+        $attribute_set = $this->attribute_set()->first();
+        return $attribute_set->attribute_groups()->get();
     }
 
     /**
@@ -215,7 +214,7 @@ abstract class WithAttribute extends Model
      * 属性集模型关系
      * @return BelongsTo
      */
-    public function getAttributeSetModel(): BelongsTo
+    public function attribute_set(): BelongsTo
     {
         return $this->belongsTo(AttributeSet::class, 'attribute_set_id', 'id');
     }

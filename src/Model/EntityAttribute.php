@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
-use Hyperf\Database\Model\Model;
-
 /**
  * @property int $id ID
  * @property int $group_id 分组ID

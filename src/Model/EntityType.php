@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
-use Hyperf\Database\Model\Model;
-
 /**
  * @property int $id ID
  * @property string $code 类别标识
@@ -15,9 +13,9 @@ use Hyperf\Database\Model\Model;
  */
 class EntityType extends Model
 {
-    const PRODUCT_ID = 1;
+    public const PRODUCT_ID = 1;
 
-    const SHOP_ID = 2;
+    public const SHOP_ID = 2;
 
     public bool $timestamps = false;
 

@@ -6,7 +6,6 @@ namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
-use Hyperf\Database\Model\Model;
 
 /**
  * @property int $id ID
@@ -18,8 +17,8 @@ use Hyperf\Database\Model\Model;
  * @property Carbon $created_at 创建时间
  * @property Carbon $updated_at 更新时间
  * @property string $deleted_at 删除时间
- * @property AttributeSet $attributeSet
- * @property Attribute $attributes
+ * @property null|AttributeSet $attribute_set
+ * @property null|Attribute[] $attribute
  */
 class AttributeGroup extends Model
 {
@@ -40,12 +39,12 @@ class AttributeGroup extends Model
      */
     protected array $casts = ['id' => 'integer', 'attribute_set_id' => 'integer', 'sort_order' => 'integer', 'default_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
-    public function getAttributeModel()
+    public function attribute(): \Hyperf\Database\Model\Relations\BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'entity_attribute', 'group_id', 'attribute_id')->withPivot('attribute_set_id');
     }
 
-    public function getAttributeSetModel()
+    public function attribute_set(): \Hyperf\Database\Model\Relations\BelongsTo
     {
         return $this->belongsTo(AttributeSet::class, 'attribute_set_id', 'id');
     }

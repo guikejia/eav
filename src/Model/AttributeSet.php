@@ -6,7 +6,6 @@ namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
-use Hyperf\Database\Model\Model;
 
 /**
  * @property int $id ID
@@ -15,8 +14,9 @@ use Hyperf\Database\Model\Model;
  * @property Carbon $created_at 创建时间
  * @property Carbon $updated_at 更新时间
  * @property string $deleted_at 删除时间
- * @property Attribute $attributes
- * @property EntityType $getEntityTypeModel
+ * @property null|Attribute[] $attribute
+ * @property null|EntityType $entity_type
+ * @property null|AttributeGroup[] $attribute_groups
  */
 class AttributeSet extends Model
 {
@@ -37,17 +37,17 @@ class AttributeSet extends Model
      */
     protected array $casts = ['id' => 'integer', 'entity_type_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
-    public function getAttributeGroupModel(): \Hyperf\Database\Model\Relations\HasMany
+    public function attribute_groups(): \Hyperf\Database\Model\Relations\HasMany
     {
         return $this->hasMany(AttributeGroup::class, 'id', 'attribute_set_id');
     }
 
-    public function getAttributeModel(): \Hyperf\Database\Model\Relations\BelongsToMany
+    public function attribute(): \Hyperf\Database\Model\Relations\BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'entity_attribute', 'attribute_set_id', 'attribute_id');
     }
 
-    public function getEntityTypeModel(): \Hyperf\Database\Model\Relations\BelongsTo
+    public function entity_type(): \Hyperf\Database\Model\Relations\BelongsTo
     {
         return $this->belongsTo(EntityType::class, 'entity_type_id', 'id');
     }

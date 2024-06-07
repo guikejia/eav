@@ -23,7 +23,7 @@ class ProductService
          */
         $groups = [];
         foreach ($attribute_groups as $attribute_group) {
-            $attribute = $attribute_group->getAttributeModel()->first();
+            $attribute = $attribute_group->attribute()->first();
             $code = $attribute?->getAttribute('code');
 
             if ($attribute && in_array($code, array_keys($attributes))) {

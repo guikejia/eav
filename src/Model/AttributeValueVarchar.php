@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
-use Hyperf\Database\Model\Model;
-
 /**
  * @property int $id 
  * @property int $entity_type_id 

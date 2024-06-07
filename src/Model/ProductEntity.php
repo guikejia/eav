@@ -37,7 +37,6 @@ use Hyperf\Database\Model\SoftDeletes;
  * @property Carbon $updated_at 修改时间
  * @property string $deleted_at 删除时间
  * @property null|AttributeSet $attribute_set
- * @property null|EntityType $entityType
  */
 class ProductEntity extends WithAttribute
 {

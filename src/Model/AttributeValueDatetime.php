@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Hyperf\Database\Model\Model;
 
 /**
  * @property int $id 
