@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Guikejia\Eav\Model;
+namespace Guikejia\Eav\Model\Trait;
 
 use Carbon\Carbon;
+use Hyperf\Database\Model\SoftDeletes;
 
 /**
  * @property int $id 商品id
@@ -37,7 +38,22 @@ use Carbon\Carbon;
  * @property string $deleted_at 删除时间
  * @property null|AttributeSet $attribute_set
  */
-class ProductEntity extends WithAttribute
+trait ProductEntity
 {
-    use \Guikejia\Eav\Model\Trait\ProductEntity;
+    use SoftDeletes;
+
+    /**
+     * The table associated with the model.
+     */
+    protected ?string $table = 'product_entity';
+
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected array $fillable = ['id', 'name', 'type', 'sale_type', 'entity_type_id', 'attribute_set_id', 'sku', 'store_id', 'media_gallery', 'description', 'base_amount', 'amount', 'store_balance_change_stage', 'weight', 'is_support_auto_expired_refund', 'is_support_refund', 'is_support_checked_refund', 'visibility', 'status', 'vendor_model', 'vendor_custom_model', 'vendor_sku', 'operating_labels', 'introduce', 'created_by', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     */
+    protected array $casts = ['id' => 'integer', 'type' => 'integer', 'sale_type' => 'integer', 'entity_type_id' => 'integer', 'attribute_set_id' => 'integer', 'store_id' => 'integer', 'base_amount' => 'integer', 'amount' => 'integer', 'store_balance_change_stage' => 'integer', 'weight' => 'integer', 'is_support_auto_expired_refund' => 'integer', 'is_support_refund' => 'integer', 'is_support_checked_refund' => 'integer', 'visibility' => 'integer', 'status' => 'integer', 'vendor_model' => 'integer', 'created_by' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Hyperf\Database\Model\SoftDeletes;
 
 /**
  * @property int $id ID
@@ -20,35 +19,5 @@ use Hyperf\Database\Model\SoftDeletes;
  */
 class AttributeSet extends Model
 {
-    use SoftDeletes;
-
-    /**
-     * The table associated with the model.
-     */
-    protected ?string $table = 'attribute_set';
-
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected array $fillable = ['id', 'name', 'entity_type_id', 'created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * The attributes that should be cast to native types.
-     */
-    protected array $casts = ['id' => 'integer', 'entity_type_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
-
-    public function attribute_groups(): \Hyperf\Database\Model\Relations\HasMany
-    {
-        return $this->hasMany(AttributeGroup::class, 'id', 'attribute_set_id');
-    }
-
-    public function attribute(): \Hyperf\Database\Model\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Attribute::class, 'entity_attribute', 'attribute_set_id', 'attribute_id');
-    }
-
-    public function entity_type(): \Hyperf\Database\Model\Relations\BelongsTo
-    {
-        return $this->belongsTo(EntityType::class, 'entity_type_id', 'id');
-    }
+    use \Guikejia\Eav\Model\Trait\AttributeSet;
 }
