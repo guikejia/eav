@@ -19,7 +19,22 @@ use Carbon\Carbon;
  * @property null|AttributeSet $attribute_set
  * @property null|Attribute[] $attribute
  */
-class AttributeGroup extends Model
+class AttributeGroup extends EavModel
 {
     use \Guikejia\Eav\Model\Trait\AttributeGroup;
+
+    /**
+     * The table associated with the model.
+     */
+    protected ?string $table = 'attribute_group';
+
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected array $fillable = ['id', 'attribute_set_id', 'code', 'name', 'sort_order', 'default_id', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     */
+    protected array $casts = ['id' => 'integer', 'attribute_set_id' => 'integer', 'sort_order' => 'integer', 'default_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

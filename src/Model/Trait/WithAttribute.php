@@ -7,6 +7,7 @@ namespace Guikejia\Eav\Model\Trait;
 use Guikejia\Eav\Model\EntityType;
 use Guikejia\Eav\Model\EntityAttribute;
 use Guikejia\Eav\Model\Attribute;
+use Guikejia\Eav\Model\AttributeSet;
 use Guikejia\Eav\Attribute\RefundWithoutVerifyAttribute;
 use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Hyperf\Database\Model\Model;

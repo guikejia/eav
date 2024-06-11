@@ -11,6 +11,9 @@ use Guikejia\Eav\Model\AttributeValueDecimal;
 use Guikejia\Eav\Model\AttributeValueDatetime;
 use Guikejia\Eav\Model\AttributeValueVarchar;
 use Guikejia\Eav\Model\AttributeValueText;
+use Guikejia\Eav\Model\EntityType;
+use Guikejia\Eav\Model\AttributeGroup;
+use Guikejia\Eav\Model\AttributeSet;
 
 /**
  * @property int $id ID
@@ -42,21 +45,6 @@ trait Attribute
     public const TYPE_TEXT = 5;
 
     protected int $entity_id;
-
-    /**
-     * The table associated with the model.
-     */
-    protected ?string $table = 'attributes';
-
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected array $fillable = ['id', 'name', 'icon', 'code', 'default_value', 'type', 'entity_type_id', 'created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * The attributes that should be cast to native types.
-     */
-    protected array $casts = ['id' => 'integer', 'type' => 'integer', 'entity_type_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
     public function setEntityAttributeValue($entity_id, $value): bool
     {

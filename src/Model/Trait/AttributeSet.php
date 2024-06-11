@@ -6,6 +6,9 @@ namespace Guikejia\Eav\Model\Trait;
 
 use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
+use Guikejia\Eav\Model\Attribute;
+use Guikejia\Eav\Model\AttributeGroup;
+use Guikejia\Eav\Model\EntityType;
 
 /**
  * @property int $id ID
@@ -21,21 +24,6 @@ use Hyperf\Database\Model\SoftDeletes;
 trait AttributeSet
 {
     use SoftDeletes;
-
-    /**
-     * The table associated with the model.
-     */
-    protected ?string $table = 'attribute_set';
-
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected array $fillable = ['id', 'name', 'entity_type_id', 'created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * The attributes that should be cast to native types.
-     */
-    protected array $casts = ['id' => 'integer', 'entity_type_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
     public function attribute_groups(): \Hyperf\Database\Model\Relations\HasMany
     {
