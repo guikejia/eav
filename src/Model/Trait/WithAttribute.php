@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model\Trait;
 
+use Guikejia\Eav\Interface\Model\AttributeModelInterface;
+use Guikejia\Eav\Interface\Model\EntityAttributeModelInterface;
 use Guikejia\Eav\Model\EntityType;
-use Guikejia\Eav\Model\EntityAttribute;
 use Guikejia\Eav\Model\Attribute;
 use Guikejia\Eav\Model\AttributeSet;
 use Guikejia\Eav\Attribute\RefundWithoutVerifyAttribute;
@@ -13,6 +14,7 @@ use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Stringable\Str;
+use function Hyperf\Support\make;
 
 trait WithAttribute
 {
@@ -95,7 +97,7 @@ trait WithAttribute
         if (in_array($attribute_code, array_keys(self::ATTRIBUTE_CLASS))) {
             $attribute = self::ATTRIBUTE_CLASS[$attribute_code]::where('code', $attribute_code)->first();
         } else {
-            $attribute = Attribute::query()->where('code', $attribute_code)->first();
+            $attribute = make(AttributeModelInterface::class)->where('code', $attribute_code)->first();
         }
 
         if (!$attribute) {
@@ -131,7 +133,7 @@ trait WithAttribute
             throw new InvalidEntityAttributeException('当前实体与实体类型不匹配');
         }
 
-        $attribute = Attribute::query()->where('code', $attribute_code)->first();
+        $attribute = make(AttributeModelInterface::class)->where('code', $attribute_code)->first();
 
         if ($attribute) {
             return $attribute->setEntityAttributeValue($this->getKey(), $value);
@@ -197,7 +199,7 @@ trait WithAttribute
             return [];
         }
 
-        return EntityAttribute::query()
+        return make(EntityAttributeModelInterface::class)
             ->where('attribute_set_id', $attribute_set_id)
             ->pluck('attribute_id')
             ->toArray();

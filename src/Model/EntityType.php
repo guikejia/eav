@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
+use Guikejia\Eav\Interface\Model\EntityTypeModelInterface;
+
 /**
  * @property int $id ID
  * @property string $code 类别标识
@@ -11,7 +13,7 @@ namespace Guikejia\Eav\Model;
  * @property string $entity_id_field 实体主键ID
  * @property string $default_attribute_set_id 默认属性集
  */
-class EntityType extends EavModel
+class EntityType extends EavModel implements EntityTypeModelInterface
 {
     use \Guikejia\Eav\Model\Trait\EntityType;
 
