@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
+use Guikejia\Eav\Interface\Model\AttributeValueTextModelInterface;
+
 /**
  * @property int $id 
  * @property int $entity_type_id 
@@ -11,7 +13,7 @@ namespace Guikejia\Eav\Model;
  * @property int $attribute_id 
  * @property string $value 
  */
-class AttributeValueText extends EavModel
+class AttributeValueText extends EavModel implements AttributeValueTextModelInterface
 {
     use \Guikejia\Eav\Model\Trait\AttributeValueText;
 
