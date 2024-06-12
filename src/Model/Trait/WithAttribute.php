@@ -161,12 +161,13 @@ trait WithAttribute
     {
         if ($this->hasSetMutator($key) ||
             $this->hasCast($key) ||
+            $this->isFillable($key) ||
             $this->isDateAttribute($key) ||
             Str::contains($key, '->')) {
             return parent::getAttribute($key);
-        } else {
-            return $this->getEntityAttributeValue($key);
         }
+
+        return $this->getEntityAttributeValue($key);
     }
 
     /**
@@ -179,13 +180,13 @@ trait WithAttribute
     {
         if ($this->hasSetMutator($key) ||
             $this->hasCast($key) ||
+            $this->isFillable($key) ||
             $this->isDateAttribute($key) ||
             Str::contains($key, '->')) {
             return parent::setAttribute($key, $value);
-        } else {
-            $this->setEntityAttribute($key, $value);
         }
 
+        $this->setEntityAttribute($key, $value);
         return $this;
     }
 
