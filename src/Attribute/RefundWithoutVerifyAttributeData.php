@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Attribute;
 
-use Guikejia\Eav\Interface\AttributeInterface;
+use Guikejia\Eav\Interface\Data\AttributeDataInterface;
 use Guikejia\Eav\Model\Attribute;
 
-class RefundWithoutVerifyAttribute extends Attribute implements AttributeInterface
+class RefundWithoutVerifyAttributeData extends Attribute implements AttributeDataInterface
 {
     protected string $code = 'refund_without_verify';
 

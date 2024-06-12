@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Interface\Model;
 
-interface EntityTypeModelInterface
+interface EntityAttributeInterface
 {
 }

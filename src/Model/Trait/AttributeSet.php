@@ -27,7 +27,7 @@ trait AttributeSet
 
     public function attribute_groups(): \Hyperf\Database\Model\Relations\HasMany
     {
-        return $this->hasMany(AttributeGroup::class, 'id', 'attribute_set_id');
+        return $this->hasMany(AttributeGroup::class, 'attribute_set_id', 'id');
     }
 
     public function attribute(): \Hyperf\Database\Model\Relations\BelongsToMany

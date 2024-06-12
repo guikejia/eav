@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\AttributeModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeInterface;
 
 /**
  * @property int $id ID
@@ -14,6 +14,7 @@ use Guikejia\Eav\Interface\Model\AttributeModelInterface;
  * @property string $code 属性标识
  * @property string $default_value 默认值
  * @property int $type 属性类型:0=无,1=整型,2=字符串,3=浮点型,4=时间,5=文本
+ * @property string $value_type 值类型
  * @property int $entity_type_id 类别ID
  * @property Carbon $created_at 创建时间
  * @property Carbon $updated_at 更新时间
@@ -22,7 +23,7 @@ use Guikejia\Eav\Interface\Model\AttributeModelInterface;
  * @property null|AttributeSet[] $attribute_sets
  * @property null|EntityType $entity_type
  */
-class Attribute extends EavModel implements AttributeModelInterface
+class Attribute extends EavModel implements AttributeInterface
 {
     use \Guikejia\Eav\Model\Trait\Attribute;
 

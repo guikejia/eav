@@ -5,8 +5,8 @@ namespace Guikejia\Eav\Interface\Model;
 use Hyperf\Database\Model\Model;
 
 /**
- * Interface AttributeModelInterface.
+ * Interface AttributeInterface.
  */
-interface AttributeModelInterface
+interface AttributeInterface
 {
 }

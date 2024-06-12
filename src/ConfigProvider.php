@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav;
 
-use Guikejia\Eav\Interface\Model\AttributeGroupModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeSetModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueDatetimeModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueDecimalModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueIntModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueTextModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueVarcharModelInterface;
-use Guikejia\Eav\Interface\Model\EntityAttributeModelInterface;
-use Guikejia\Eav\Interface\Model\EntityTypeModelInterface;
-use Guikejia\Eav\Interface\Model\ProductEntityModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeGroupInterface;
+use Guikejia\Eav\Interface\Model\AttributeInterface;
+use Guikejia\Eav\Interface\Model\AttributeSetInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDatetimeInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDecimalInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueIntInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueTextInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueVarcharInterface;
+use Guikejia\Eav\Interface\Model\EntityAttributeInterface;
+use Guikejia\Eav\Interface\Model\EntityTypeInterface;
+use Guikejia\Eav\Interface\Model\ProductEntityInterface;
 use Guikejia\Eav\Model\Attribute;
 use Guikejia\Eav\Model\AttributeGroup;
 use Guikejia\Eav\Model\AttributeSet;
@@ -33,17 +33,17 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
-                EntityTypeModelInterface::class => EntityType::class,
-                EntityAttributeModelInterface::class => EntityAttribute::class,
-                AttributeModelInterface::class => Attribute::class,
-                AttributeGroupModelInterface::class => AttributeGroup::class,
-                AttributeSetModelInterface::class => AttributeSet::class,
-                AttributeValueIntModelInterface::class => AttributeValueInt::class,
-                AttributeValueDecimalModelInterface::class => AttributeValueDecimal::class,
-                AttributeValueDatetimeModelInterface::class => AttributeValueDatetime::class,
-                AttributeValueTextModelInterface::class => AttributeValueText::class,
-                AttributeValueVarcharModelInterface::class => AttributeValueVarchar::class,
-                ProductEntityModelInterface::class => ProductEntity::class,
+                EntityTypeInterface::class => EntityType::class,
+                EntityAttributeInterface::class => EntityAttribute::class,
+                AttributeInterface::class => Attribute::class,
+                AttributeGroupInterface::class => AttributeGroup::class,
+                AttributeSetInterface::class => AttributeSet::class,
+                AttributeValueIntInterface::class => AttributeValueInt::class,
+                AttributeValueDecimalInterface::class => AttributeValueDecimal::class,
+                AttributeValueDatetimeInterface::class => AttributeValueDatetime::class,
+                AttributeValueTextInterface::class => AttributeValueText::class,
+                AttributeValueVarcharInterface::class => AttributeValueVarchar::class,
+                ProductEntityInterface::class => ProductEntity::class,
             ],
             'commands' => [
             ],

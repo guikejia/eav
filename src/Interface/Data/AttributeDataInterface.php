@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Guikejia\Eav\Interface;
+namespace Guikejia\Eav\Interface\Data;
 
-interface AttributeInterface
+interface AttributeDataInterface
 {
     public function setEntityId($entity_id): void;
 

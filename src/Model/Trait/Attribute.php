@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model\Trait;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\AttributeValueDatetimeModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueDecimalModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueIntModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueTextModelInterface;
-use Guikejia\Eav\Interface\Model\AttributeValueVarcharModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDatetimeInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDecimalInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueIntInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueTextInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueVarcharInterface;
 use Hyperf\Database\Model\SoftDeletes;
 use Guikejia\Eav\Model\AttributeValueInt;
 use Guikejia\Eav\Model\AttributeValueDecimal;
@@ -71,11 +71,11 @@ trait Attribute
         ];
 
         $data = match ($this->type) {
-            self::TYPE_INT => make(AttributeValueIntModelInterface::class)->updateOrCreate($attributes, $value),
-            self::TYPE_FLOAT => make(AttributeValueDecimalModelInterface::class)->updateOrCreate($attributes, $value),
-            self::TYPE_TIME => make(AttributeValueDatetimeModelInterface::class)->updateOrCreate($attributes, $value),
-            self::TYPE_TEXT => make(AttributeValueTextModelInterface::class)->updateOrCreate($attributes, $value),
-            default => make(AttributeValueVarcharModelInterface::class)->updateOrCreate($attributes, $value),
+            self::TYPE_INT => make(AttributeValueIntInterface::class)->updateOrCreate($attributes, $value),
+            self::TYPE_FLOAT => make(AttributeValueDecimalInterface::class)->updateOrCreate($attributes, $value),
+            self::TYPE_TIME => make(AttributeValueDatetimeInterface::class)->updateOrCreate($attributes, $value),
+            self::TYPE_TEXT => make(AttributeValueTextInterface::class)->updateOrCreate($attributes, $value),
+            default => make(AttributeValueVarcharInterface::class)->updateOrCreate($attributes, $value),
         };
 
         return (int) $data?->id > 0;
@@ -89,11 +89,11 @@ trait Attribute
         ];
 
         $value = match ($this->type) {
-            self::TYPE_INT => make(AttributeValueIntModelInterface::class)->where($conditions)->value('value'),
-            self::TYPE_FLOAT => make(AttributeValueDecimalModelInterface::class)->where($conditions)->value('value'),
-            self::TYPE_TIME => make(AttributeValueDatetimeModelInterface::class)->where($conditions)->value('value'),
-            self::TYPE_TEXT => make(AttributeValueTextModelInterface::class)->where($conditions)->value('value'),
-            default => make(AttributeValueVarcharModelInterface::class)->where($conditions)->value('value'),
+            self::TYPE_INT => make(AttributeValueIntInterface::class)->where($conditions)->value('value'),
+            self::TYPE_FLOAT => make(AttributeValueDecimalInterface::class)->where($conditions)->value('value'),
+            self::TYPE_TIME => make(AttributeValueDatetimeInterface::class)->where($conditions)->value('value'),
+            self::TYPE_TEXT => make(AttributeValueTextInterface::class)->where($conditions)->value('value'),
+            default => make(AttributeValueVarcharInterface::class)->where($conditions)->value('value'),
         };
 
         if (empty($value) && !empty($this->default_value)) {

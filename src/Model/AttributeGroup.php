@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\AttributeGroupModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeGroupInterface;
 
 /**
  * @property int $id ID
@@ -20,7 +20,7 @@ use Guikejia\Eav\Interface\Model\AttributeGroupModelInterface;
  * @property null|AttributeSet $attribute_set
  * @property null|Attribute[] $attribute
  */
-class AttributeGroup extends EavModel implements AttributeGroupModelInterface
+class AttributeGroup extends EavModel implements AttributeGroupInterface
 {
     use \Guikejia\Eav\Model\Trait\AttributeGroup;
 

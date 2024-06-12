@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model\Trait;
 
-use Guikejia\Eav\Interface\Model\AttributeModelInterface;
-use Guikejia\Eav\Interface\Model\EntityAttributeModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeGroupInterface;
+use Guikejia\Eav\Interface\Model\AttributeInterface;
+use Guikejia\Eav\Interface\Model\EntityAttributeInterface;
 use Guikejia\Eav\Model\EntityType;
 use Guikejia\Eav\Model\Attribute;
 use Guikejia\Eav\Model\AttributeSet;
-use Guikejia\Eav\Attribute\RefundWithoutVerifyAttribute;
+use Guikejia\Eav\Attribute\RefundWithoutVerifyAttributeData;
 use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
@@ -19,7 +20,7 @@ use function Hyperf\Support\make;
 trait WithAttribute
 {
     public const ATTRIBUTE_CLASS = [
-        'refund_without_verify' => RefundWithoutVerifyAttribute::class
+        'refund_without_verify' => RefundWithoutVerifyAttributeData::class
     ];
 
     /**
@@ -97,7 +98,7 @@ trait WithAttribute
         if (in_array($attribute_code, array_keys(self::ATTRIBUTE_CLASS))) {
             $attribute = self::ATTRIBUTE_CLASS[$attribute_code]::where('code', $attribute_code)->first();
         } else {
-            $attribute = make(AttributeModelInterface::class)->where('code', $attribute_code)->first();
+            $attribute = make(AttributeInterface::class)->where('code', $attribute_code)->first();
         }
 
         if (!$attribute) {
@@ -133,7 +134,7 @@ trait WithAttribute
             throw new InvalidEntityAttributeException('当前实体与实体类型不匹配');
         }
 
-        $attribute = make(AttributeModelInterface::class)->where('code', $attribute_code)->first();
+        $attribute = make(AttributeInterface::class)->where('code', $attribute_code)->first();
 
         if ($attribute) {
             return $attribute->setEntityAttributeValue($this->getKey(), $value);
@@ -142,14 +143,15 @@ trait WithAttribute
         throw new InvalidEntityAttributeException('Attribute not found: ' . $attribute_code);
     }
 
+    /**
+     * 获取商品的属性分组.
+     * @return \Guikejia\Eav\Model\AttributeGroup[]
+     */
     public function getAttributeGroup()
     {
-        /**
-         * @var AttributeSet $attribute_set
-         * @var AttributeGroup $attribute_group
-         */
-        $attribute_set = $this->attribute_set()->first();
-        return $attribute_set->attribute_groups()->get();
+        return make(AttributeGroupInterface::class)
+            ->where('attribute_set_id', $this->attribute_set_id)
+            ->get();
     }
 
     /**
@@ -193,13 +195,13 @@ trait WithAttribute
      */
     public function getEntityAttributeIds(): array
     {
-        $attribute_set_id = $this->getAttribute('attribute_set_id');
+        $attribute_set_id = $this->attribute_set_id;
 
         if (! $attribute_set_id) {
             return [];
         }
 
-        return make(EntityAttributeModelInterface::class)
+        return make(EntityAttributeInterface::class)
             ->where('attribute_set_id', $attribute_set_id)
             ->pluck('attribute_id')
             ->toArray();

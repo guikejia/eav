@@ -4,34 +4,39 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Service;
 
-use Guikejia\Eav\Attribute\RefundWithoutVerifyAttribute;
+use Guikejia\Eav\Attribute\RefundWithoutVerifyAttributeData;
 use Guikejia\Eav\Exception\InvalidProductException;
-use Guikejia\Eav\Model\AttributeGroup;
+use Guikejia\Eav\Interface\Model\ProductEntityInterface;
 use Guikejia\Eav\Model\ProductEntity;
+use function Hyperf\Support\make;
 
 class ProductService
 {
+    public function __construct(
+        protected AttributeService $attributeService,
+    ) {
+    }
+
+    /**
+     * 获取商品属性（包含完整的分组与属性结构）
+     * @param $product_id
+     * @return array
+     */
     public function getProductAttributes($product_id): array
     {
         $product = $this->getProduct($product_id);
-
-        $attributes = $product->getEntityAttributes();
         $attribute_groups = $product->getAttributeGroup();
 
-        /**
-         * @var AttributeGroup $attribute_group
-         */
         $groups = [];
         foreach ($attribute_groups as $attribute_group) {
-            $attribute = $attribute_group->attribute()->first();
-            $code = $attribute?->getAttribute('code');
-
-            if ($attribute && in_array($code, array_keys($attributes))) {
-                $groups[$attribute_group->code] = $attribute->toArray();
-            }
+            $groups[$attribute_group->code] =
+                $this->attributeService->getGroupAttributes($attribute_group->id, $product_id);
         }
 
-        return $groups;
+        $attribute_ids = $this->attributeService->getNonGroupAttributeIds($product->attribute_set_id);
+        $attributes = $this->attributeService->getAttributeByIds($attribute_ids, $product_id);
+
+        return ['groups' => $groups, 'attributes' => $attributes];
     }
 
     public function isProductRefundVerify($product_id): bool
@@ -39,7 +44,7 @@ class ProductService
         $product = $this->getProduct($product_id);
 
         /**
-         * @var RefundWithoutVerifyAttribute $refund_without_verify
+         * @var RefundWithoutVerifyAttributeData $refund_without_verify
          */
         if ($refund_without_verify = $product->getEntityAttribute('refund_without_verify')) {
             return $refund_without_verify->execution();
@@ -48,12 +53,12 @@ class ProductService
         return true;
     }
 
-    public function getProduct($id): ProductEntity
+    public function getProduct($id): ProductEntityInterface
     {
         /**
          * @var ?ProductEntity $product
          */
-        $product = ProductEntity::query()->whereKey($id)->first();
+        $product = make(ProductEntityInterface::class)->whereKey($id)->first();
 
         if (!$product) {
             throw new InvalidProductException('Product not found: ' . $id);

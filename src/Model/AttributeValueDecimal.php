@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model;
 
-use Guikejia\Eav\Interface\Model\AttributeValueDecimalModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDecimalInterface;
 
 /**
  * @property int $id 
@@ -13,7 +13,7 @@ use Guikejia\Eav\Interface\Model\AttributeValueDecimalModelInterface;
  * @property int $attribute_id 
  * @property float $value
  */
-class AttributeValueDecimal extends EavModel implements AttributeValueDecimalModelInterface
+class AttributeValueDecimal extends EavModel implements AttributeValueDecimalInterface
 {
     use \Guikejia\Eav\Model\Trait\AttributeValueDecimal;
 

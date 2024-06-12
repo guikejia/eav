@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\ProductEntityModelInterface;
+use Guikejia\Eav\Interface\Model\ProductEntityInterface;
 
 /**
  * @property int $id 商品id
@@ -38,7 +38,7 @@ use Guikejia\Eav\Interface\Model\ProductEntityModelInterface;
  * @property string $deleted_at 删除时间
  * @property null|AttributeSet $attribute_set
  */
-class ProductEntity extends WithAttribute implements ProductEntityModelInterface
+class ProductEntity extends WithAttribute implements ProductEntityInterface
 {
     use \Guikejia\Eav\Model\Trait\ProductEntity;
 

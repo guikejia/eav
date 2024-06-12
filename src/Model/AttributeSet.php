@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\AttributeSetModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeSetInterface;
 
 /**
  * @property int $id ID
@@ -18,7 +18,7 @@ use Guikejia\Eav\Interface\Model\AttributeSetModelInterface;
  * @property null|EntityType $entity_type
  * @property null|AttributeGroup[] $attribute_groups
  */
-class AttributeSet extends EavModel implements AttributeSetModelInterface
+class AttributeSet extends EavModel implements AttributeSetInterface
 {
     use \Guikejia\Eav\Model\Trait\AttributeSet;
 

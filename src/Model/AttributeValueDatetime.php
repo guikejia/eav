@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model;
 
 use Carbon\Carbon;
-use Guikejia\Eav\Interface\Model\AttributeValueDatetimeModelInterface;
+use Guikejia\Eav\Interface\Model\AttributeValueDatetimeInterface;
 
 /**
  * @property int $id 
@@ -14,7 +14,7 @@ use Guikejia\Eav\Interface\Model\AttributeValueDatetimeModelInterface;
  * @property int $attribute_id 
  * @property Carbon $value
  */
-class AttributeValueDatetime extends EavModel implements AttributeValueDatetimeModelInterface
+class AttributeValueDatetime extends EavModel implements AttributeValueDatetimeInterface
 {
     use \Guikejia\Eav\Model\Trait\AttributeValueDatetime;
 

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model\Trait;
 
 use Carbon\Carbon;
+use Guikejia\Eav\Interface\Model\EntityAttributeInterface;
+use Guikejia\Eav\Model\EntityAttribute;
 use Hyperf\Database\Model\SoftDeletes;
 use Guikejia\Eav\Model\AttributeSet;
 use Guikejia\Eav\Model\Attribute;
+use function Hyperf\Support\make;
 
 /**
  * @property int $id ID
@@ -25,6 +28,18 @@ use Guikejia\Eav\Model\Attribute;
 trait AttributeGroup
 {
     use SoftDeletes;
+
+    public function getGroupAttributeIds(): array
+    {
+        /**
+         * @var $entity_attribute EntityAttribute
+         */
+        $entity_attribute = make(EntityAttributeInterface::class);
+        return $entity_attribute
+            ->where('group_id', $this->id)
+            ->pluck('attribute_id')
+            ->toArray();
+    }
 
     public function attribute(): \Hyperf\Database\Model\Relations\BelongsToMany
     {
