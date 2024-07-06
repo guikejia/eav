@@ -34,6 +34,9 @@ class AttributeService
             'icon',
             'type',
             'value_type',
+            'backend_component',
+            'source_model',
+            'default_value',
         ]);
 
         $attributes = [];
@@ -45,6 +48,9 @@ class AttributeService
                 'icon' => $attribute->icon,
                 'type' => $attribute->type,
                 'value_type' => $attribute->value_type,
+                'backend_component' => $attribute->backend_component,
+                'source_model' => $attribute->source_model,
+                'default_value' => $attribute->default_value,
                 'value' => $attribute->getEntityAttributeValue($entity_id),
             ];
         }

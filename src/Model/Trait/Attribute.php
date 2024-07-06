@@ -29,6 +29,9 @@ use function Hyperf\Support\make;
  * @property string $default_value 默认值
  * @property int $type 属性类型:0=无,1=整型,2=字符串,3=浮点型,4=时间,5=文本
  * @property int $entity_type_id 类别ID
+ * @property string $value_type 前台组件类型
+ * @property string $backend_component 后台组件类型
+ * @property string $source_model 组件数据源
  * @property Carbon $created_at 创建时间
  * @property Carbon $updated_at 更新时间
  * @property string $deleted_at 删除时间
@@ -55,6 +58,51 @@ trait Attribute
 
     public const TYPE_TEXT = 5;
 
+    public const COMPONENT_LIST = [
+        self::COMPONENT_TEXT => '文本',
+        self::COMPONENT_IMAGE => '图片',
+        self::COMPONENT_MULTI_IMAGE => '多图',
+        self::COMPONENT_RICH_TEXT => '富文本',
+        self::COMPONENT_TAG => '标签',
+        self::COMPONENT_SELECT => '下拉单选',
+        self::COMPONENT_MULTI_SELECT => '下拉多选',
+        self::COMPONENT_RADIO => '单选',
+        self::COMPONENT_DATE => '日期',
+        self::COMPONENT_DATE_RANGE => '日期范围',
+        self::COMPONENT_DATETIME => '日期时间',
+        self::COMPONENT_DATETIME_RANGE => '日期时间范围',
+        self::COMPONENT_TIME => '时间',
+        self::COMPONENT_TIME_RANGE => '时间范围',
+    ];
+
+    public const COMPONENT_TEXT = 'text';
+
+    public const COMPONENT_IMAGE = 'image';
+
+    public const COMPONENT_MULTI_IMAGE = 'multi_images';
+
+    public const COMPONENT_RICH_TEXT = 'rich_text';
+
+    public const COMPONENT_TAG = 'tag';
+
+    public const COMPONENT_SELECT = 'select';
+
+    public const COMPONENT_MULTI_SELECT = 'multi_select';
+
+    public const COMPONENT_RADIO = 'radio';
+
+    public const COMPONENT_DATE = 'date';
+
+    public const COMPONENT_DATE_RANGE = 'date_range';
+
+    public const COMPONENT_DATETIME = 'datetime';
+
+    public const COMPONENT_DATETIME_RANGE = 'datetime_range';
+
+    public const COMPONENT_TIME = 'time';
+
+    public const COMPONENT_TIME_RANGE = 'time_range';
+
     protected int $entity_id;
 
     public function setEntityAttributeValue($entity_id, $value): bool
@@ -67,6 +115,7 @@ trait Attribute
         $value = [
             'attribute_id' => $this->id,
             'entity_id' => $entity_id,
+            'entity_type_id' => $this->entity_type_id ?? 0,
             'value' => $value,
         ];
 

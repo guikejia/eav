@@ -29,8 +29,12 @@ class ProductService
 
         $groups = [];
         foreach ($attribute_groups as $attribute_group) {
-            $groups[$attribute_group->code] =
-                $this->attributeService->getGroupAttributes($attribute_group->id, $product_id);
+            $groups[] = [
+                'id' => $attribute_group->id,
+                'code' => $attribute_group->code,
+                'name' => $attribute_group->name,
+                'attributes' => $this->attributeService->getGroupAttributes($attribute_group->id, $product_id),
+            ];
         }
 
         $attribute_ids = $this->attributeService->getNonGroupAttributeIds($product->attribute_set_id);
