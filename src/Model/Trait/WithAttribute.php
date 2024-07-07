@@ -15,6 +15,7 @@ use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
 use Hyperf\Stringable\Str;
+
 use function Hyperf\Support\make;
 
 trait WithAttribute
@@ -58,9 +59,8 @@ trait WithAttribute
 
     /**
      * 获取所有实体属性的值
-     * @return array
      */
-    public function getEntityAttributes(): array
+    public function getEntityAttributes()
     {
         if ($this->isEntityType() === false) {
             throw new InvalidEntityAttributeException('当前实体与实体类型不匹配');
@@ -70,7 +70,16 @@ trait WithAttribute
         /**
          * @var AttributeSet $attribute_set
          */
-        $attributes = $attribute_set?->attribute()->get();
+        return $attribute_set?->attribute()->get();
+    }
+
+    /**
+     * 获取所有实体属性的值
+     * @return array
+     */
+    public function getEntityAttributeValues(): array
+    {
+        $attributes = $this->getEntityAttributes();
 
         $values = [];
         /**
@@ -81,6 +90,42 @@ trait WithAttribute
         }
 
         return $values;
+    }
+
+    public function getBackendEntityAttributes(): array
+    {
+        $attributes = $this->getEntityAttributes();
+
+        $values = [];
+        /**
+         * @var Attribute $attribute
+         */
+        foreach ($attributes as $attribute) {
+            $backend_component = $attribute->backend_component;
+            $value = $attribute?->getEntityAttributeValue($this->getKey());
+
+            $values[$attribute->code] = $value ? $this->getBackendEntityValue($backend_component, $value) : $value;
+        }
+
+        return $values;
+    }
+
+    public function transBackendEntityValue($component, $value)
+    {
+        return match ($component) {
+            Attribute::COMPONENT_TIME_RANGE, Attribute::COMPONENT_DATETIME_RANGE, Attribute::COMPONENT_DATE_RANGE => json_encode($value),
+            Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT => implode(',', $value),
+            default => $value,
+        };
+    }
+
+    public function getBackendEntityValue($component, $value)
+    {
+        return match ($component) {
+            Attribute::COMPONENT_TIME_RANGE, Attribute::COMPONENT_DATETIME_RANGE, Attribute::COMPONENT_DATE_RANGE => json_decode($value, true),
+            Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT => explode(',', $value),
+            default => $value,
+        };
     }
 
     /**
@@ -137,6 +182,7 @@ trait WithAttribute
         $attribute = make(AttributeInterface::class)->where('code', $attribute_code)->first();
 
         if ($attribute) {
+            $value = $this->transBackendEntityValue($attribute->backend_component, $value);
             return $attribute->setEntityAttributeValue($this->getKey(), $value);
         }
 
@@ -214,7 +260,7 @@ trait WithAttribute
      */
     public function getAttributesWithEntity(): array
     {
-        $entity_attributes = $this->getEntityAttributes();
+        $entity_attributes = $this->getEntityAttributeValues();
         $attributes = parent::getAttributes();
 
         return array_merge($attributes, $entity_attributes);
