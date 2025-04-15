@@ -53,6 +53,10 @@ class AttributeService
                 'default_value' => $attribute->default_value,
                 'value' => $attribute->getEntityAttributeValue($entity_id),
             ];
+
+            if ($options = $attribute->attribute_options) {
+                $attributes[$attribute->code]['options'] = $options->pluck('label', 'value')->toArray();
+            }
         }
 
         return $attributes;

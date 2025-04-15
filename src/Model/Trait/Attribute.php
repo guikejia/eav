@@ -11,6 +11,7 @@ use Guikejia\Eav\Interface\Model\AttributeValueIntInterface;
 use Guikejia\Eav\Interface\Model\AttributeValueTextInterface;
 use Guikejia\Eav\Interface\Model\AttributeValueVarcharInterface;
 use Hyperf\Database\Model\SoftDeletes;
+use Guikejia\Eav\Model\AttributeOption;
 use Guikejia\Eav\Model\AttributeValueInt;
 use Guikejia\Eav\Model\AttributeValueDecimal;
 use Guikejia\Eav\Model\AttributeValueDatetime;
@@ -38,6 +39,7 @@ use function Hyperf\Support\make;
  * @property null|AttributeGroup[] $attribute_groups
  * @property null|AttributeSet[] $attribute_sets
  * @property null|EntityType $entity_type
+ * @property null|AttributeOption[] $attribute_options
  * @property AttributeValueInt $attributeValueInt
  * @property AttributeValueDecimal $attributeValueDecimal
  * @property AttributeValueDatetime $attributeValueDatetime
@@ -160,6 +162,11 @@ trait Attribute
     public function attribute_groups(): \Hyperf\Database\Model\Relations\BelongsToMany
     {
         return $this->belongsToMany(AttributeGroup::class, 'entity_attribute', 'attribute_id', 'group_id');
+    }
+
+    public function attribute_options(): \Hyperf\Database\Model\Relations\HasMany
+    {
+        return $this->hasMany(AttributeOption::class, 'attribute_id', 'id');
     }
 
     public function attribute_sets(): \Hyperf\Database\Model\Relations\BelongsToMany
