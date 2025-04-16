@@ -206,9 +206,12 @@ trait WithAttribute
     public function getAttribute(string $key)
     {
         if ($this->hasSetMutator($key) ||
+            $this->hasGetMutator($key) ||
             $this->hasCast($key) ||
             $this->isFillable($key) ||
             $this->isDateAttribute($key) ||
+            $this->hasAppended($key) ||
+            $this->isRelation($key) ||
             Str::contains($key, '->')) {
             return parent::getAttribute($key);
         }
@@ -225,9 +228,12 @@ trait WithAttribute
     public function setAttribute(string $key, mixed $value)
     {
         if ($this->hasSetMutator($key) ||
+            $this->hasGetMutator($key) ||
             $this->hasCast($key) ||
             $this->isFillable($key) ||
             $this->isDateAttribute($key) ||
+            $this->hasAppended($key) ||
+            $this->isRelation($key) ||
             Str::contains($key, '->')) {
             return parent::setAttribute($key, $value);
         }

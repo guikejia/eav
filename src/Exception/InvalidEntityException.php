@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Guikejia\Eav\Exception;
 
 class InvalidEntityException extends \LogicException

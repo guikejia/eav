@@ -1,8 +1,8 @@
 <?php
 
-namespace Guikejia\Eav\Interface\Model;
+declare(strict_types=1);
 
-use Hyperf\Database\Model\Model;
+namespace Guikejia\Eav\Interface\Model;
 
 /**
  * Interface AttributeInterface.
