@@ -91,6 +91,8 @@ trait Attribute
 
     public const COMPONENT_MULTI_SELECT = 'multi_select';
 
+    public const COMPONENT_CHECKBOX = 'checkbox';
+
     public const COMPONENT_RADIO = 'radio';
 
     public const COMPONENT_DATE = 'date';
@@ -109,6 +111,10 @@ trait Attribute
 
     public function setEntityAttributeValue($entity_id, $value): bool
     {
+        if ($value === null) {
+            return true;
+        }
+
         $attributes = [
             'attribute_id' => $this->id,
             'entity_id' => $entity_id,
