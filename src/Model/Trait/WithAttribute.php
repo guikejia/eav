@@ -14,7 +14,6 @@ use Guikejia\Eav\Attribute\RefundWithoutVerifyAttributeData;
 use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
-use Hyperf\Stringable\Str;
 
 use function Hyperf\Support\make;
 
@@ -205,18 +204,13 @@ trait WithAttribute
      */
     public function getAttribute(string $key)
     {
-        if ($this->hasSetMutator($key) ||
-            $this->hasGetMutator($key) ||
-            $this->hasCast($key) ||
-            $this->isFillable($key) ||
-            $this->isDateAttribute($key) ||
-            $this->hasAppended($key) ||
-            $this->isRelation($key) ||
-            Str::contains($key, '->')) {
-            return parent::getAttribute($key);
+        if ($attribute = parent::getAttribute($key)) {
+            return $attribute;
         }
 
-        return $this->getEntityAttributeValue($key);
+        if ($this->hasEavAttribute($key)) {
+            return $this->getEntityAttributeValue($key);
+        }
     }
 
     /**
@@ -227,19 +221,24 @@ trait WithAttribute
      */
     public function setAttribute(string $key, mixed $value)
     {
-        if ($this->hasSetMutator($key) ||
-            $this->hasGetMutator($key) ||
-            $this->hasCast($key) ||
-            $this->isFillable($key) ||
-            $this->isDateAttribute($key) ||
-            $this->hasAppended($key) ||
-            $this->isRelation($key) ||
-            Str::contains($key, '->')) {
+        if ($this->getAttribute($key)) {
             return parent::setAttribute($key, $value);
         }
 
-        $this->setEntityAttribute($key, $value);
+        if ($this->hasEavAttribute($key)) {
+            $this->setEntityAttribute($key, $value);
+        }
+
         return $this;
+    }
+
+    public function isHasAppended(string $attribute): bool
+    {
+        if (method_exists($this, 'hasAppended')) {
+            return $this->hasAppended($attribute);
+        }
+
+        return false;
     }
 
     /**
@@ -279,5 +278,15 @@ trait WithAttribute
     public function attribute_set(): BelongsTo
     {
         return $this->belongsTo(AttributeSet::class, 'attribute_set_id', 'id');
+    }
+
+    public function attributes(): \Hyperf\Collection\Enumerable|\Hyperf\Collection\Collection
+    {
+        return $this->attribute_set()->with('attribute')->get()->pluck('attribute')->flatten();
+    }
+
+    public function hasEavAttribute(string $attribute): bool
+    {
+        return $this->attribute_set()->whereRelation('attribute', 'code', $attribute)->exists();
     }
 }
