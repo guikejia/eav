@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace Guikejia\Eav\Model\Trait;
 
+use Guikejia\Eav\Attribute\RefundWithoutVerifyAttributeData;
+use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Guikejia\Eav\Interface\Model\AttributeGroupInterface;
 use Guikejia\Eav\Interface\Model\AttributeInterface;
 use Guikejia\Eav\Interface\Model\EntityAttributeInterface;
-use Guikejia\Eav\Model\EntityType;
 use Guikejia\Eav\Model\Attribute;
 use Guikejia\Eav\Model\AttributeSet;
-use Guikejia\Eav\Attribute\RefundWithoutVerifyAttributeData;
-use Guikejia\Eav\Exception\InvalidEntityAttributeException;
+use Guikejia\Eav\Model\EntityType;
+use Hyperf\Collection\Collection;
+use Hyperf\Collection\Enumerable;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsTo;
 
+use Hyperf\Stringable\Str;
 use function Hyperf\Support\make;
 
 trait WithAttribute
 {
     public const ATTRIBUTE_CLASS = [
-        'refund_without_verify' => RefundWithoutVerifyAttributeData::class
+        'refund_without_verify' => RefundWithoutVerifyAttributeData::class,
     ];
 
     /**
@@ -113,7 +116,7 @@ trait WithAttribute
     {
         return match ($component) {
             Attribute::COMPONENT_TIME_RANGE, Attribute::COMPONENT_DATETIME_RANGE, Attribute::COMPONENT_DATE_RANGE => json_encode($value),
-            Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT, Attribute::COMPONENT_CHECKBOX => implode(',', $value),
+            Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT, Attribute::COMPONENT_CHECKBOX => implode(',', (array) $value),
             default => $value,
         };
     }
@@ -145,7 +148,7 @@ trait WithAttribute
             $attribute = make(AttributeInterface::class)->where('code', $attribute_code)->first();
         }
 
-        if (!$attribute) {
+        if (! $attribute) {
             throw new InvalidEntityAttributeException('Attribute not found: ' . $attribute_code);
         }
 
@@ -221,7 +224,7 @@ trait WithAttribute
      */
     public function setAttribute(string $key, mixed $value)
     {
-        if ($this->getAttribute($key)) {
+        if ($this->isModelField($key)) {
             return parent::setAttribute($key, $value);
         }
 
@@ -230,6 +233,18 @@ trait WithAttribute
         }
 
         return $this;
+    }
+
+    public function isModelField($key): bool
+    {
+        return $this->hasSetMutator($key) ||
+            $this->hasGetMutator($key) ||
+            $this->hasCast($key) ||
+            $this->isFillable($key) ||
+            $this->isDateAttribute($key) ||
+            $this->isHasAppended($key) ||
+            $this->isRelation($key) ||
+            Str::contains($key, '->');
     }
 
     public function isHasAppended(string $attribute): bool
@@ -280,7 +295,7 @@ trait WithAttribute
         return $this->belongsTo(AttributeSet::class, 'attribute_set_id', 'id');
     }
 
-    public function attributes(): \Hyperf\Collection\Enumerable|\Hyperf\Collection\Collection
+    public function attributes(): Collection|Enumerable
     {
         return $this->attribute_set()->with('attribute')->get()->pluck('attribute')->flatten();
     }
