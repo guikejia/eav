@@ -131,6 +131,7 @@ trait WithAttribute
         return match ($component) {
             Attribute::COMPONENT_TIME_RANGE, Attribute::COMPONENT_DATETIME_RANGE, Attribute::COMPONENT_DATE_RANGE => json_decode($value, true),
             Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT, Attribute::COMPONENT_CHECKBOX => explode(',', $value),
+            Attribute::COMPONENT_DATE, Attribute::COMPONENT_DATETIME, Attribute::COMPONENT_TIME => $value ?: null,
             default => $value,
         };
     }
@@ -212,8 +213,8 @@ trait WithAttribute
      */
     public function getAttribute(string $key)
     {
-        if ($attribute = parent::getAttribute($key)) {
-            return $attribute;
+        if ($this->isModelField($key)) {
+            return parent::getAttribute($key);
         }
 
         if ($this->hasEavAttribute($key)) {
@@ -305,8 +306,29 @@ trait WithAttribute
         return $this->attribute_set()->with('attribute')->get()->pluck('attribute')->flatten();
     }
 
+    public function isAttributeExist(string $code)
+    {
+        return make(AttributeInterface::class)->where('code', $code)->exists();
+    }
+
     public function hasEavAttribute(string $attribute): bool
     {
-        return $this->attribute_set()->whereRelation('attribute', 'code', $attribute)->exists();
+        $attribute_model = make(AttributeInterface::class);
+        if ($attribute_model->where('code', $attribute)->exists()) {
+            $attribute_table = $attribute_model->getTable();
+            $entity_attribute_model = make(EntityAttributeInterface::class);
+            $entity_attribute_table = $entity_attribute_model->getTable();
+            return $entity_attribute_model
+                ->join($attribute_table, $entity_attribute_table . '.attribute_id', '=', $attribute_table . '.id')
+                ->where([
+                    $entity_attribute_table . '.attribute_set_id' => $this->attribute_set_id,
+                    $attribute_table . '.code' => $attribute
+                ])->exists();
+
+            // 不支持3.1之前版本
+            // return $this->attribute_set()->whereRelation('attribute', 'code', $attribute)->exists();
+        }
+
+        return false;
     }
 }
