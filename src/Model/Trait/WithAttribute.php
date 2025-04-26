@@ -114,6 +114,11 @@ trait WithAttribute
 
     public function transBackendEntityValue($component, $value)
     {
+        if ($value === null) {
+            // 不处理值为 null 的属性
+            return null;
+        }
+
         return match ($component) {
             Attribute::COMPONENT_TIME_RANGE, Attribute::COMPONENT_DATETIME_RANGE, Attribute::COMPONENT_DATE_RANGE => json_encode($value),
             Attribute::COMPONENT_TAG, Attribute::COMPONENT_MULTI_IMAGE, Attribute::COMPONENT_MULTI_SELECT, Attribute::COMPONENT_CHECKBOX => implode(',', (array) $value),
@@ -184,7 +189,7 @@ trait WithAttribute
         $attribute = make(AttributeInterface::class)->where('code', $attribute_code)->first();
 
         if ($attribute) {
-            $value = $this->transBackendEntityValue($attribute->backend_component, $value);
+            $value = $value === null ? null : $this->transBackendEntityValue($attribute->backend_component, $value);
             return $attribute->setEntityAttributeValue($this->getKey(), $value);
         }
 

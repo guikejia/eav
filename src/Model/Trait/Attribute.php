@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Guikejia\Eav\Model\Trait;
 
 use Carbon\Carbon;
+use Guikejia\Eav\Exception\InvalidEntityAttributeException;
 use Guikejia\Eav\Interface\Model\AttributeValueDatetimeInterface;
 use Guikejia\Eav\Interface\Model\AttributeValueDecimalInterface;
 use Guikejia\Eav\Interface\Model\AttributeValueIntInterface;
@@ -20,6 +21,7 @@ use Guikejia\Eav\Model\AttributeValueText;
 use Guikejia\Eav\Model\EntityType;
 use Guikejia\Eav\Model\AttributeGroup;
 use Guikejia\Eav\Model\AttributeSet;
+
 use function Hyperf\Support\make;
 
 /**
@@ -112,7 +114,8 @@ trait Attribute
     public function setEntityAttributeValue($entity_id, $value): bool
     {
         if ($value === null) {
-            return true;
+            // 约定值为 null 时即为删除值
+            return $this->deleteEntityAttributeValue($entity_id);
         }
 
         $attributes = [
@@ -132,7 +135,8 @@ trait Attribute
             self::TYPE_FLOAT => make(AttributeValueDecimalInterface::class)->updateOrCreate($attributes, $value),
             self::TYPE_TIME => make(AttributeValueDatetimeInterface::class)->updateOrCreate($attributes, $value),
             self::TYPE_TEXT => make(AttributeValueTextInterface::class)->updateOrCreate($attributes, $value),
-            default => make(AttributeValueVarcharInterface::class)->updateOrCreate($attributes, $value),
+            self::TYPE_STRING => make(AttributeValueVarcharInterface::class)->updateOrCreate($attributes, $value),
+            default => (throw new InvalidEntityAttributeException('无效的实体属性类型')),
         };
 
         return (int) $data?->id > 0;
@@ -150,7 +154,8 @@ trait Attribute
             self::TYPE_FLOAT => make(AttributeValueDecimalInterface::class)->where($conditions)->value('value'),
             self::TYPE_TIME => make(AttributeValueDatetimeInterface::class)->where($conditions)->value('value'),
             self::TYPE_TEXT => make(AttributeValueTextInterface::class)->where($conditions)->value('value'),
-            default => make(AttributeValueVarcharInterface::class)->where($conditions)->value('value'),
+            self::TYPE_STRING => make(AttributeValueVarcharInterface::class)->where($conditions)->value('value'),
+            default => null,
         };
 
         if (empty($value) && !empty($this->default_value)) {
@@ -158,6 +163,23 @@ trait Attribute
         }
 
         return $value;
+    }
+
+    public function deleteEntityAttributeValue($entity_id): bool
+    {
+        $conditions = [
+            'attribute_id' => $this->id,
+            'entity_id' => $entity_id,
+        ];
+
+        return (bool) match ($this->type) {
+            self::TYPE_INT => make(AttributeValueIntInterface::class)->where($conditions)->delete(),
+            self::TYPE_FLOAT => make(AttributeValueDecimalInterface::class)->where($conditions)->delete(),
+            self::TYPE_TIME => make(AttributeValueDatetimeInterface::class)->where($conditions)->delete(),
+            self::TYPE_TEXT => make(AttributeValueTextInterface::class)->where($conditions)->delete(),
+            self::TYPE_STRING => make(AttributeValueVarcharInterface::class)->where($conditions)->delete(),
+            default => (throw new InvalidEntityAttributeException('无效的实体属性类型')),
+        };
     }
 
     public function setEntityId($entity_id): void
